@@ -1,0 +1,30 @@
+name 'yubi-go'
+org 'akerl'
+
+source(
+  type: 'git',
+  path: '.'
+)
+
+build do
+  make
+  cp 'bin'
+end
+
+package(
+  type: 'file',
+  artifacts: [
+    {
+      source: "bin/#{@forge.name}_darwin",
+      name: "#{@forge.name}_darwin"
+    },
+    {
+      source: "bin/#{@forge.name}_linux",
+      name: "#{@forge.name}_linux"
+    }
+  ]
+)
+
+test do
+  # TODO: add tests
+end
