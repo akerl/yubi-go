@@ -1,4 +1,4 @@
-.PHONY: default build clean lint fmt test deps source update
+.PHONY: default build clean lint fmt test deps source init update
 
 PACKAGE = yubi-go
 NAMESPACE = github.com/akerl
@@ -40,15 +40,15 @@ fmt:
 test: deps
 	cd $(BASE) && $(GO) test ./...
 
-Gopkg.toml: source $(GODEP)
+init: source $(GODEP)
 	cd $(BASE) && $(GODEP) init
 	cp $(BASE)/Gopkg.{lock,toml} ./
 
-update:
+update: $(BASE) $(GODEP)
 	cd $(BASE) && $(GODEP) ensure -update
 	cp $(BASE)/Gopkg.{lock,toml} ./
 
-deps: source Gopkg.toml $(GODEP)
+deps: source $(GODEP)
 	cd $(BASE) && $(GODEP) ensure
 
 $(BASE):
