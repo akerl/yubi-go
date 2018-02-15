@@ -1,4 +1,4 @@
-.PHONY: default build clean lint fmt test deps source
+.PHONY: default build clean lint fmt test deps source update
 
 PACKAGE = yubi-go
 NAMESPACE = github.com/akerl
@@ -7,7 +7,6 @@ export GOPATH = $(CURDIR)/.gopath
 BIN = $(GOPATH)/bin
 BASE = $(GOPATH)/src/$(NAMESPACE)/$(PACKAGE)
 GOFILES = $(shell find . -type f -name '*.go' ! -path './.*' ! -path './vendor/*')
-GOPACKAGES = $(shell echo $(GOFILES) | xargs dirname | sort | uniq)
 
 GO = go
 GOFMT = gofmt
@@ -28,7 +27,7 @@ clean:
 	rm -rf $(GOPATH) bin
 
 lint: $(GOLINT)
-	$(GOLINT) -set_exit_status $(GOPACKAGES)
+	$(GOLINT) -set_exit_status ./...
 
 fmt:
 	@echo "Running gofmt on $(GOFILES)"
@@ -39,9 +38,17 @@ fmt:
 		  fi;
 
 test: deps
-	cd $(BASE) && $(GO) test $(GOPACKAGES)
+	cd $(BASE) && $(GO) test ./...
 
-deps: $(BASE) $(GODEP)
+Gopkg.toml: source $(GODEP)
+	cd $(BASE) && $(GODEP) init
+	cp $(BASE)/Gopkg.{lock,toml} ./
+
+update:
+	cd $(BASE) && $(GODEP) ensure -update
+	cp $(BASE)/Gopkg.{lock,toml} ./
+
+deps: source Gopkg.toml $(GODEP)
 	cd $(BASE) && $(GODEP) ensure
 
 $(BASE):
