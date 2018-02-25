@@ -1,0 +1,2 @@
+PACKAGE = yubi-go
+NAMESPACE = github.com/akerl

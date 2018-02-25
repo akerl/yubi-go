@@ -9,11 +9,11 @@ dependencies:
   - git fetch --tags origin
 test:
   override:
-  - make -f meta/Makefile
+  - make
   post:
   - cp -r pkg/* $CIRCLE_ARTIFACTS/
 deployment:
   release:
     tag: /.*/
     commands:
-    - make -f meta/Makefile release
+    - make release
