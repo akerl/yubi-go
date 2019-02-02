@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func oathListRunner(cmd *cobra.Command, args []string) error {
+func oathListRunner(_ *cobra.Command, _ []string) error {
 	o, err := oath.NewClient()
 	if err != nil {
 		return err
